@@ -14,7 +14,7 @@ pub fn cli() -> App<'static, 'static> {
             AppSettings::DeriveDisplayOrder,
             AppSettings::VersionlessSubcommands,
             AppSettings::AllowExternalSubcommands,
-            AppSettings::SubcommandRequiredElseHelp
+            AppSettings::SubcommandRequiredElseHelp,
         ]);
     app
 }

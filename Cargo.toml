@@ -2,7 +2,22 @@
 name = "kvs"
 version = "0.1.0"
 authors = ["ericdeansanchez <ericdeansanchez@berkeley.edu>"]
+documentation = "https://github.com/ericdeansanchez/kvs"
+homepage = "https://github.com/ericdeansanchez/kvs"
+repository = "https://github.com/ericdeansanchez/kvs"
+readme = "README.md"
+license = "MIT"
 edition = "2018"
 
+[lib]
+name = "kvs"
+path = "src/lib.rs"
+
 [dependencies]
+# workaround see https://github.com/rust-lang/rls/issues/1454
+bitflags = "=1.0.4"
 clap = "2.33.0"
+
+[[test]]
+name = "integration"
+path = "tests/tests.rs"
