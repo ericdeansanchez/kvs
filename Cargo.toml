@@ -2,6 +2,9 @@
 name = "kvs"
 version = "0.1.0"
 authors = ["ericdeansanchez <ericdeansanchez@berkeley.edu>"]
+description = """
+kvs is a key-value store written in rust.
+"""
 documentation = "https://github.com/ericdeansanchez/kvs"
 homepage = "https://github.com/ericdeansanchez/kvs"
 repository = "https://github.com/ericdeansanchez/kvs"
