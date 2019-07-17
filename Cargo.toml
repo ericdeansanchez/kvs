@@ -1,0 +1,7 @@
+[package]
+name = "kvs"
+version = "0.1.0"
+authors = ["ericdeansanchez <ericdeansanchez@berkeley.edu>"]
+edition = "2018"
+
+[dependencies]
