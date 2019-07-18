@@ -34,4 +34,9 @@ The kvs library contains a type, KvStore, that supports the following methods:
 
     Remove a given key.
 
-The KvStore type stores values in-memory, and thus the command-line client can do little more than print the version. The get/ set / rm commands will return an "unimplemented" error when run from the command line. Future projects will store values on disk and have a working command line interface.
+The KvStore type stores values in-memory, and thus the command-line client can
+do little more than print the version. 
+
+The get/ set / rm commands will return an "unimplemented" error when run from 
+the command line. Future projects will store values on disk and have a working
+command line interface.

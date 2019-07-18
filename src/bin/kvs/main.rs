@@ -1,15 +1,29 @@
+use std::process::exit;
+
 mod cli;
+mod commands;
 
 fn main() {
-    let app = cli::init();
-    delegate_to_subcommand(app);
+    exec(cli::app());
 }
 
-fn delegate_to_subcommand(app: clap::App<'static, 'static>) {
-    let args = app.get_matches();
-    /*
-    match args.subcommand() {
-
+fn exec(app: clap::App<'static, 'static>) {
+    match app.get_matches().subcommand() {
+        (stringify!(get), Some(_arg_matches)) => {
+            eprintln!("unimplemented");
+            exit(1);
+        }
+        (stringify!(rm), Some(_arg_matches)) => {
+            eprintln!("unimplemented");
+            exit(1);
+        }
+        (stringify!(set), Some(_arg_matches)) => {
+            eprintln!("unimplemented");
+            exit(1);
+        }
+        _ => {
+            eprintln!("unimplemented");
+            exit(1);
+        }
     }
-    */
 }
