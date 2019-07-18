@@ -2,6 +2,9 @@
 use crate::commands;
 use kvs::command_prelude::*;
 
+/// Builds an `App`. This `App` is comprised of information read from cargo
+/// environment variables, a list of settings, and a list of a list of all
+/// supported sub-commands.
 pub fn app() -> App {
     App::new(env!(stringify!(CARGO_PKG_NAME)))
         .version(env!(stringify!(CARGO_PKG_VERSION)))
