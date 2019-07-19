@@ -1,2 +1,2 @@
-/// command_prelude module declaration.
+/// Utility module declaration.
 pub mod command_prelude;

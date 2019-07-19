@@ -1,16 +1,17 @@
 #![warn(missing_docs)]
 //! Primary data structures and algorithms for creating and manipulating
-//! `KvStore`.
+//! [`KvStore`](struct.KvStore.html)
 use std::collections::HashMap;
 
+// Module declarations.
 mod util;
 
 /// Re-exports `util::command_prelude` to be brought in by
 /// `use kvs::command_prelude`.
 pub use util::command_prelude;
 
-/// Primary `KvStore` structure. This structure is a wrapper around a
-/// `std::collections::HashMap<String, String>`.
+/// Primary key-value store structure. This structure is a wrapper around a
+/// [`HashMap`](https://doc.rust-lang.org/std/collections/struct.HashMap.html).
 pub struct KvStore {
     hm: HashMap<String, String>,
 }
@@ -34,8 +35,8 @@ impl KvStore {
         Default::default()
     }
 
-    /// Gets a string value if the given key has been `set`; otherwise this
-    /// function returns `None`.
+    /// Gets a string value if the given key has been [`set`]; otherwise this
+    /// method returns `None`.
     ///
     /// # Examples
     ///
@@ -49,13 +50,14 @@ impl KvStore {
     /// kvs.set("hello".to_owned(), "mars".to_owned());
     /// assert_eq!(kvs.get("hello".to_owned()), Some("mars".to_owned()));
     /// ```
+    /// [`set`]: #method.set
     pub fn get(&self, key: String) -> Option<String> {
         self.hm.get(&key).cloned()
     }
 
     /// Removes a key, along with its corresponding value, from the `KvStore`
     /// If the given key is in the `KvStore`, then the removed value will be
-    /// return. Otherwise, `None` is returned.
+    /// return. Otherwise, if the key does not exist, then `None` is returned.
     ///
     /// # Examples
     ///
@@ -73,9 +75,9 @@ impl KvStore {
     }
 
     /// Sets a key-value pair in the `KvStore` by inserting this entry-pair into
-    /// the underlying map. If the given has not be set, then this function
-    /// returns `None`. Otherwise, if the given key's value is updated, the old
-    /// value is returned.
+    /// the underlying map. If the given key has not already been set, then this
+    /// method returns `None`. Otherwise, the given key's value is updated, and
+    /// the old value is returned.
     ///
     /// # Examples
     ///
@@ -90,7 +92,7 @@ impl KvStore {
         self.hm.insert(key, value)
     }
 
-    /// Returns true if the `KvStore` is empty and false otherwise.
+    /// Returns true if the `KvStore` representation is empty, false otherwise.
     ///
     /// # Examples
     ///
