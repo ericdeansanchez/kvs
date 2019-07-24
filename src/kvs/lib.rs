@@ -10,6 +10,8 @@ mod util;
 /// `use kvs::command_prelude`.
 pub use util::command_prelude;
 
+pub use util::errors::Result;
+
 /// Primary key-value store structure. This structure is a wrapper around a
 /// [`HashMap`](https://doc.rust-lang.org/std/collections/struct.HashMap.html).
 pub struct KvStore {
