@@ -1,0 +1,15 @@
+[project]
+name = "project name"
+
+[container]
+name = "docker"
+
+[workspace]
+name = "kvs"
+ignore = ["target", ".git", ".gitignore"]
+
+[command]
+cmds = [
+    "gcc dir.c -o app", 
+    "valgrind --leak-check=full ./app",
+]
