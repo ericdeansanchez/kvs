@@ -2,6 +2,9 @@
 //! Primary data structures and algorithms for creating and manipulating
 //! [`KvStore`](struct.KvStore.html)
 use std::collections::HashMap;
+use std::fs;
+use std::io::{self, BufReader, BufWriter, Read, Seek, SeekFrom, Write};
+use std::path::{Path, PathBuf};
 
 // Module declarations.
 mod util;
@@ -15,7 +18,18 @@ pub use util::errors::Result;
 /// Primary key-value store structure. This structure is a wrapper around a
 /// [`HashMap`](https://doc.rust-lang.org/std/collections/struct.HashMap.html).
 pub struct KvStore {
-    hm: HashMap<String, String>,
+    /// A mapping between key-strings and their corresponding CommandPosition.
+    index: HashMap<String, String>,
+    /// The path to this store's directory.
+    path: PathBuf,
+    /// A mapping between a given version number and its corresponding reader.
+    readers: HashMap<u64, u64>,
+    /// The number of 'stale bytes' the current store contains.
+    stale_bytes: u64,
+    /// The writer of a log.
+    writer: String,
+    /// The version number of a log.
+    version: u64,
 }
 
 impl KvStore {
@@ -54,7 +68,7 @@ impl KvStore {
     /// ```
     /// [`set`]: #method.set
     pub fn get(&self, key: String) -> Option<String> {
-        self.hm.get(&key).cloned()
+        self.index.get(&key).cloned()
     }
 
     /// Removes a key, along with its corresponding value, from the `KvStore`
@@ -73,7 +87,7 @@ impl KvStore {
     /// assert_eq!(kvs.remove("hello".to_owned()), Some("mars".to_owned()));
     /// ```
     pub fn remove(&mut self, key: String) -> Option<String> {
-        self.hm.remove(&key)
+        self.index.remove(&key)
     }
 
     /// Sets a key-value pair in the `KvStore` by inserting this entry-pair into
@@ -91,7 +105,7 @@ impl KvStore {
     /// assert_eq!(kvs.set("hello".to_owned(), "jupiter".to_owned()), Some("mars".to_owned()));
     /// ```
     pub fn set(&mut self, key: String, value: String) -> Option<String> {
-        self.hm.insert(key, value)
+        self.index.insert(key, value)
     }
 
     /// Returns true if the `KvStore` representation is empty, false otherwise.
@@ -108,7 +122,7 @@ impl KvStore {
     /// assert!(!kvs.is_empty());
     /// ```
     pub fn is_empty(&self) -> bool {
-        self.hm.is_empty()
+        self.index.is_empty()
     }
 
     /// Returns the number of entries in the `KvStore`.
@@ -125,12 +139,36 @@ impl KvStore {
     /// assert_eq!(kvs.size(), 1);
     /// ```
     pub fn size(&self) -> usize {
-        self.hm.len()
+        self.index.len()
+    }
+
+    pub fn open<P: AsRef<Path>>(path: P) -> Result<KvStore> {
+        fs::create_dir_all(path.as_ref())?;
+        Ok(KvStore::default())
     }
 }
 
 impl Default for KvStore {
     fn default() -> Self {
-        KvStore { hm: HashMap::new() }
+        KvStore {
+            index: HashMap::new(),
+            path: PathBuf::new(),
+            stale_bytes: 0,
+            readers: HashMap::new(),
+            writer: String::new(),
+            version: 0,
+        }
+    }
+}
+
+fn version_list<P: AsRef<Path>>(path: P) -> Result<Vec<u64>> {
+    Ok(vec![])
+}
+
+struct LogPath(PathBuf);
+
+impl<P: AsRef<Path>> From<(P, u64)> for LogPath {
+    fn from((path, version): (P, u64)) -> Self {
+        LogPath(path.as_ref().join(format!("{}.log", version)))
     }
 }

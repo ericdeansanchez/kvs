@@ -1,4 +1,5 @@
 use kvs::command_prelude::{App, Arg, SubCommand};
+use kvs::Result;
 
 pub fn cli() -> App {
     SubCommand::with_name("set")
@@ -9,4 +10,8 @@ pub fn cli() -> App {
                 .help("The value of the key")
                 .required(true),
         )
+}
+
+pub fn exec(key: String, value: String) -> Result<()> {
+    Ok(())
 }
