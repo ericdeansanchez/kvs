@@ -1,5 +1,8 @@
+use std::env;
+
 use kvs::command_prelude::{App, Arg, SubCommand};
 use kvs::Result;
+use kvs::{KvOpts, KvStore};
 
 pub fn cli() -> App {
     SubCommand::with_name("get")
@@ -8,5 +11,5 @@ pub fn cli() -> App {
 }
 
 pub fn exec(key: String) -> Result<Option<String>> {
-    Ok(Some(key))
+    KvStore::open_with_opts(env::current_dir()?, KvOpts {})?.get(key)
 }
