@@ -1,3 +1,4 @@
+use std::io::{self, Write};
 use std::process::exit;
 
 use kvs::Result;
@@ -14,31 +15,30 @@ fn main() -> Result<()> {
 /// maps a given command to _its_ executor.
 fn run(app: clap::App<'static, 'static>) -> Result<()> {
     match app.get_matches().subcommand() {
-        ("get", Some(arg_matches)) => get_from(arg_matches),
-        ("rm", Some(_arg_matches)) => commands::remove::exec("placeholder".to_owned()),
-        ("set", Some(arg_matches)) => set_from(arg_matches),
+        ("get", Some(args)) => get(args),
+        ("rm", Some(args)) => remove(args),
+        ("set", Some(args)) => set(args),
         _ => {
-            eprintln!("unimplemented");
             exit(1);
         }
     }
 }
 
-fn get_from(arg_matches: &clap::ArgMatches) -> Result<()> {
+fn get(arg_matches: &clap::ArgMatches) -> Result<()> {
     let key = arg_matches
         .value_of("KEY")
         .map(String::from)
         .expect("KEY argument missing");
 
     if let Some(value) = commands::get::exec(key)? {
-        println!("{}", value);
+        io::stdout().write_fmt(format_args!("{}", value))?;
     } else {
-        println!("Key not found");
+        io::stdout().write(b"Key not found")?;
     }
     Ok(())
 }
 
-fn set_from(arg_matches: &clap::ArgMatches) -> Result<()> {
+fn set(arg_matches: &clap::ArgMatches) -> Result<()> {
     let key = arg_matches
         .value_of("KEY")
         .map(String::from)
@@ -50,4 +50,20 @@ fn set_from(arg_matches: &clap::ArgMatches) -> Result<()> {
         .expect("VALUE argument missing");
 
     commands::set::exec(key, value)
+}
+
+fn remove(arg_matches: &clap::ArgMatches) -> Result<()> {
+    let key = arg_matches
+        .value_of("KEY")
+        .map(String::from)
+        .expect("KEY argument missing");
+
+    match commands::remove::exec(key) {
+        Ok(()) => {}
+        Err(_) => {
+            io::stdout().write(b"Key not found")?;
+            exit(2);
+        }
+    }
+    Ok(())
 }

@@ -3,17 +3,21 @@ use std::io::{self, BufWriter, Seek, SeekFrom, Write};
 use crate::util::errors::Result;
 
 pub struct KvsWriter<W: Write + Seek> {
-    pub writer: BufWriter<W>,
-    pub pos: u64,
+    writer: BufWriter<W>,
+    pos: u64,
 }
 
 impl<W: Write + Seek> KvsWriter<W> {
-    pub fn new(mut buf: W) -> Result<Self> {
-        let pos = buf.seek(SeekFrom::Current(0))?;
+    pub fn new(mut inner: W) -> Result<Self> {
+        let pos = inner.seek(SeekFrom::Current(0))?;
         Ok(KvsWriter {
-            writer: BufWriter::new(buf),
+            writer: BufWriter::new(inner),
             pos,
         })
+    }
+
+    pub fn pos(&self) -> u64 {
+        self.pos
     }
 }
 

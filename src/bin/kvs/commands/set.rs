@@ -1,8 +1,7 @@
 use std::env;
 
 use kvs::command_prelude::{App, Arg, SubCommand};
-use kvs::KvStore;
-use kvs::Result;
+use kvs::{KvStore, Result};
 
 pub fn cli() -> App {
     SubCommand::with_name("set")

@@ -1,5 +1,7 @@
+use std::env;
+
 use kvs::command_prelude::{App, Arg, SubCommand};
-use kvs::Result;
+use kvs::{KvStore, Result};
 
 pub fn cli() -> App {
     SubCommand::with_name("rm")
@@ -8,5 +10,5 @@ pub fn cli() -> App {
 }
 
 pub fn exec(key: String) -> Result<()> {
-    Ok(())
+    KvStore::open(env::current_dir()?)?.remove(key)
 }
