@@ -220,10 +220,13 @@ impl KvStore {
         serde_json::to_writer(&mut self.writer, &cmd)?;
         self.writer.flush()?;
         if let Command::Set { key, .. } = cmd {
+            // The call to `insert` returns `None` if the key is not present
+            // upon insertion; otherwise, the previous value is returned.
             if let Some(old_cmd) = self
                 .index
                 .insert(key, (self.version, pos..self.writer.pos()).into())
             {
+                // Record the old command's length as stale bytes.
                 self.stale_bytes += old_cmd.len;
             }
         }
@@ -340,6 +343,7 @@ fn log_path<P: AsRef<Path>>(path: P, version: u64) -> PathBuf {
 struct Loader;
 
 impl Loader {
+    /// Loads the log from disk, into memory.
     fn load(
         version: u64,
         reader: &mut KvsReader<File>,
