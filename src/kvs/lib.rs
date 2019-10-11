@@ -24,7 +24,7 @@ use kvio::{reader::KvsReader, writer::KvsWriter};
 pub use util::command_prelude;
 pub use util::errors::{KvsError, Result};
 
-const MAX_STALE_BYTES: u64 = 100;
+const MAX_STALE_BYTES: u64 = 512;
 
 /// Primary key-value store structure.
 ///
